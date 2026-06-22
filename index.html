@@ -11,37 +11,30 @@
         p { color: #aaa; margin-bottom: 30px; font-size: 1rem; line-height: 1.5; }
         .btn { display: inline-block; background-color: #00d26a; color: black; font-weight: bold; font-size: 1.2rem; padding: 15px 40px; border-radius: 50px; text-decoration: none; transition: background 0.2s; cursor: pointer; border: none; width: 100%; box-sizing: border-box; }
         .btn:hover { background-color: #00b359; }
-        .footer-note { margin-top: 20px; color: #666; font-size: 0.85rem; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="box">
         <h1>Welcome to the Experiment</h1>
-        <p>Click the button below to launch the study system in your official device browser.</p>
+        <p>Click the button below to initialize your clean study session.</p>
         
-        <button onclick="launchStudy()" class="btn">Click Here to Start</button>
-
-        <p class="footer-note">Note: If you encounter an error, tap the three dots (menu) in the top corner of your screen and select "Open in Browser" or "Open in Chrome/Safari".</p>
+        <button onclick="launchCleanSession()" class="btn">Start Study</button>
     </div>
 
     <script>
-        function launchStudy() {
-            const googleLink = "https://script.google.com/macros/s/AKfycbzKUGjhYX_2kWKrC4jO-ezEtNsDd1c7jVC1zqS2yCSkkvXQdTcRKeWQZQn7J1Tk7kxx1A/exec";
+        function launchCleanSession() {
+            // תוספת השרשור המיוחדת בסוף הלינק (/u/0/ או הוספת פרמטר אורח) מאלצת את גוגל להתעלם מהחשבון המחובר הנוכחי בנייד
+            const cleanGoogleLink = "https://script.google.com/macros/s/AKfycbzKUGjhYX_2kWKrC4jO-ezEtNsDd1c7jVC1zqS2yCSkkvXQdTcRKeWQZQn7J1Tk7kxx1A/exec?authuser=0";
             
-            // בדיקה אם המשתמש באנדרואיד
             const isAndroid = /Android/i.test(navigator.userAgent);
             
             if (isAndroid) {
-                // טריק שמאלץ את אנדרואיד לפתוח ישירות את דפדפן כרום החיצוני במקום להישאר בתוך הסורק/וואטסאפ
-                const intentLink = "intent://" + googleLink.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+                // באנדרואיד: מכריחים פתיחה בכרום ללא העברת נתוני חשבון קודמים (מצב נקי)
+                const intentLink = "intent://" + cleanGoogleLink.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
                 window.location.href = intentLink;
             } else {
-                // עבור אייפון - פתיחה בחלון חדש שמנתק את ההקשר של הדפדפן הפנימי
-                const newWindow = window.open(googleLink, '_blank', 'noopener,noreferrer');
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                    // אם חוסם הפופ-אפים של האייפון חסם את זה, נעביר אותו באותו חלון אבל בצורה נקייה
-                    window.location.href = googleLink;
-                }
+                // באייפון: פתיחה מנותקת לחלוטין
+                window.location.href = cleanGoogleLink;
             }
         }
     </script>
