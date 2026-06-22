@@ -9,15 +9,41 @@
         .box { background: #1e1e1e; padding: 40px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         h1 { color: #00d26a; font-size: 1.8rem; margin-bottom: 10px; }
         p { color: #aaa; margin-bottom: 30px; font-size: 1rem; line-height: 1.5; }
-        .btn { display: inline-block; background-color: #00d26a; color: black; font-weight: bold; font-size: 1.2rem; padding: 15px 40px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
+        .btn { display: inline-block; background-color: #00d26a; color: black; font-weight: bold; font-size: 1.2rem; padding: 15px 40px; border-radius: 50px; text-decoration: none; transition: background 0.2s; cursor: pointer; border: none; width: 100%; box-sizing: border-box; }
         .btn:hover { background-color: #00b359; }
+        .footer-note { margin-top: 20px; color: #666; font-size: 0.85rem; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="box">
         <h1>Welcome to the Experiment</h1>
-        <p>Click the button below to open the study system and enter your participant ID.</p>
-        <a href="https://script.google.com/macros/s/AKfycbzKUGjhYX_2kWKrC4jO-ezEtNsDd1c7jVC1zqS2yCSkkvXQdTcRKeWQZQn7J1Tk7kxx1A/exec" class="btn">Click Here to Start</a>
+        <p>Click the button below to launch the study system in your official device browser.</p>
+        
+        <button onclick="launchStudy()" class="btn">Click Here to Start</button>
+
+        <p class="footer-note">Note: If you encounter an error, tap the three dots (menu) in the top corner of your screen and select "Open in Browser" or "Open in Chrome/Safari".</p>
     </div>
+
+    <script>
+        function launchStudy() {
+            const googleLink = "https://script.google.com/macros/s/AKfycbzKUGjhYX_2kWKrC4jO-ezEtNsDd1c7jVC1zqS2yCSkkvXQdTcRKeWQZQn7J1Tk7kxx1A/exec";
+            
+            // בדיקה אם המשתמש באנדרואיד
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // טריק שמאלץ את אנדרואיד לפתוח ישירות את דפדפן כרום החיצוני במקום להישאר בתוך הסורק/וואטסאפ
+                const intentLink = "intent://" + googleLink.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+                window.location.href = intentLink;
+            } else {
+                // עבור אייפון - פתיחה בחלון חדש שמנתק את ההקשר של הדפדפן הפנימי
+                const newWindow = window.open(googleLink, '_blank', 'noopener,noreferrer');
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                    // אם חוסם הפופ-אפים של האייפון חסם את זה, נעביר אותו באותו חלון אבל בצורה נקייה
+                    window.location.href = googleLink;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
